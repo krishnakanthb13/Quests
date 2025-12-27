@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI, Type, ThinkingLevel } from "@google/genai";
 import { GridState, CellValue, ConstraintType } from '../types';
 
 // Initialize Gemini
@@ -87,6 +87,10 @@ export const parseGridFromImage = async (base64Image: string): Promise<GridState
               }
             }
           }
+        },
+        thinkingConfig: {
+          includeThoughts: true,
+          thinkingLevel: ThinkingLevel.HIGH
         }
       }
     });
