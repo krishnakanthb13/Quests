@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Widget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a2e;
+            /* Solid color to match host */
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            /* Hide scrollbars */
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .widget-container {
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 0;
+            /* Let host handle corners */
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 5px;
+            /* Drag handle area could be here */
+        }
+
+        .settings-btn,
+        .close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 6px;
+            width: 24px;
+            height: 24px;
+            color: #e0e0e0;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 5px;
+            /* Replaced gap */
+        }
+
+        .settings-btn:hover,
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .time-display {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: move;
+            /* Indicate it's draggable */
+        }
+
+        .time-text {
+            font-family: 'Georgia', serif;
+            font-size: 32px;
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            word-wrap: break-word;
+            padding: 10px;
+            transition: font-size 0.3s ease;
+        }
+
+        .settings-panel {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 10px;
+            padding: 15px;
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        .settings-panel h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 5px;
+        }
+
+        .setting-item {
+            margin-bottom: 12px;
+        }
+
+        .setting-item label {
+            display: block;
+            font-size: 12px;
+            color: #b0b0b0;
+            margin-bottom: 5px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            font-size: 13px;
+            margin-bottom: 5px;
+            /* Replaced gap */
+        }
+
+        .radio-group label input {
+            margin-right: 10px;
+        }
+
+        .radio-group label:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .text-size-control {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-size-control input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+        .text-size-display {
+            text-align: right;
+            font-size: 11px;
+            color: #b0b0b0;
+        }
+
+        .save-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #4a9eff 0%, #357abd 100%);
+            border: none;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .save-btn:hover {
+            box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="widget-container">
+        <div class="header">
+            <button class="settings-btn" id="settingsBtn" title="Settings">&#9881;</button>
+            <button class="close-btn" id="closeBtn" title="Close">&times;</button>
+        </div>
+        <div class="time-display" id="timeDisplay">
+            <div class="time-text" id="timeText">Loading...</div>
+        </div>
+        <div class="settings-panel" id="settingsPanel">
+            <h3>Settings</h3>
+            <div class="setting-item">
+                <label>Time Format:</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="timeFormat" value="numeric" checked>
+                        <span>Three fifteen</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="timeFormat" value="natural">
+                        <span>A quarter past three</span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label>Text Size:</label>
+                <div class="text-size-control">
+                    <input type="range" id="textSizeSlider" min="16" max="64" value="32" step="2">
+                    <div class="text-size-display">
+                        <span id="textSizeValue">32</span>px
+                    </div>
+                </div>
+            </div>
+            <button class="save-btn" id="saveBtn">Save</button>
+        </div>
+    </div>
+
+    <script>
+        // ES5 Compatibility Fix for IE11/WebBrowser Control
+        var numberWords = {
+            0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+            6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
+            11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen', 15: 'fifteen',
+            16: 'sixteen', 17: 'seventeen', 18: 'eighteen', 19: 'nineteen', 20: 'twenty',
+            30: 'thirty', 40: 'forty', 50: 'fifty'
+        };
+
+        var hourWords = {
+            1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+            6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
+            11: 'eleven', 12: 'twelve'
+        };
+
+        function getHourWord(hour) {
+            var h = hour === 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+            return hourWords[h];
+        }
+
+        function getMinuteWord(minutes) {
+            if (minutes === 0) return '';
+            if (minutes < 20) return numberWords[minutes];
+            var tens = Math.floor(minutes / 10) * 10;
+            var ones = minutes % 10;
+            return ones === 0 ? numberWords[tens] : numberWords[tens] + '-' + numberWords[ones];
+        }
+
+        function getMinutesToWord(minutes) {
+            var remaining = 60 - minutes;
+            if (remaining < 20) return numberWords[remaining];
+            var tens = Math.floor(remaining / 10) * 10;
+            var ones = remaining % 10;
+            return ones === 0 ? numberWords[tens] : numberWords[tens] + '-' + numberWords[ones];
+        }
+
+        function timeToWordsNumeric(hour, minutes) {
+            var hourWord = getHourWord(hour);
+            if (minutes === 0) {
+                return hourWord.charAt(0).toUpperCase() + hourWord.slice(1) + " o'clock";
+            }
+            var minuteWord = getMinuteWord(minutes);
+            var formattedMinute = minutes < 10 ? 'oh ' + minuteWord : minuteWord;
+            return hourWord.charAt(0).toUpperCase() + hourWord.slice(1) + ' ' + formattedMinute;
+        }
+
+        function timeToWordsNatural(hour, minutes) {
+            var hourWord = getHourWord(hour);
+            var nextHourWord = getHourWord(hour + 1);
+            if (minutes === 0) {
+                return hourWord.charAt(0).toUpperCase() + hourWord.slice(1) + " o'clock";
+            } else if (minutes === 15) {
+                return 'A quarter past ' + hourWord;
+            } else if (minutes === 30) {
+                return 'Half past ' + hourWord;
+            } else if (minutes === 45) {
+                return 'A quarter to ' + nextHourWord;
+            } else if (minutes < 30) {
+                var minuteWord = getMinuteWord(minutes);
+                return minuteWord.charAt(0).toUpperCase() + minuteWord.slice(1) + ' past ' + hourWord;
+            } else {
+                var minutesTo = getMinutesToWord(minutes);
+                return minutesTo.charAt(0).toUpperCase() + minutesTo.slice(1) + ' to ' + nextHourWord;
+            }
+        }
+
+        function convertTimeToWords(hour, minutes, format) {
+            if (!format) format = 'numeric';
+            return format === 'natural' ? timeToWordsNatural(hour, minutes) : timeToWordsNumeric(hour, minutes);
+        }
+
+        var timeFormat = localStorage.getItem('timeFormat') || 'numeric';
+        var textSize = parseInt(localStorage.getItem('textSize')) || 32;
+
+        function updateTime() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var timeString = convertTimeToWords(hours, minutes, timeFormat);
+            document.getElementById('timeText').textContent = timeString;
+        }
+
+        function updateTextSize(size) {
+            textSize = size;
+            document.getElementById('timeText').style.fontSize = size + 'px';
+            localStorage.setItem('textSize', size.toString());
+        }
+
+        function initializeSettings() {
+            var savedFormat = localStorage.getItem('timeFormat');
+            if (savedFormat) {
+                timeFormat = savedFormat;
+                // Safe selector for IE
+                var radios = document.getElementsByName('timeFormat');
+                for (var i = 0; i < radios.length; i++) {
+                    if (radios[i].value === savedFormat) {
+                        radios[i].checked = true;
+                    }
+                }
+            }
+            var savedTextSize = localStorage.getItem('textSize');
+            if (savedTextSize) {
+                textSize = parseInt(savedTextSize);
+                document.getElementById('textSizeSlider').value = textSize;
+                document.getElementById('textSizeValue').textContent = textSize;
+                updateTextSize(textSize);
+            }
+        }
+
+        document.getElementById('settingsBtn').addEventListener('click', function () {
+            var panel = document.getElementById('settingsPanel');
+            if (panel.className.indexOf('active') === -1) {
+                panel.className += ' active';
+            } else {
+                panel.className = panel.className.replace(' active', '');
+            }
+        });
+
+        document.getElementById('closeBtn').addEventListener('click', function () {
+            // Note: window.close() is often blocked by browsers/hosts, 
+            // but the host button in the PowerShell script is the primary close method.
+            window.close();
+            if (typeof window.external !== 'undefined' && typeof window.external.Close === 'function') {
+                window.external.Close();
+            }
+        });
+
+        var textSizeSlider = document.getElementById('textSizeSlider');
+        var textSizeValue = document.getElementById('textSizeValue');
+
+        textSizeSlider.addEventListener('change', function (e) { // 'input' event can be buggy in older IE for sliders, 'change' is safer
+            var size = parseInt(e.target.value);
+            textSizeValue.textContent = size;
+            updateTextSize(size);
+        });
+
+        // IE11 'input' event support
+        textSizeSlider.addEventListener('input', function (e) {
+            var size = parseInt(e.target.value);
+            textSizeValue.textContent = size;
+            // Immediate update for smooth preview
+            document.getElementById('timeText').style.fontSize = size + 'px';
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', function () {
+            var radios = document.getElementsByName('timeFormat');
+            var selectedFormat = 'numeric';
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    selectedFormat = radios[i].value;
+                    break;
+                }
+            }
+            timeFormat = selectedFormat;
+            localStorage.setItem('timeFormat', selectedFormat);
+
+            var currentTextSize = parseInt(textSizeSlider.value);
+            updateTextSize(currentTextSize);
+
+            var panel = document.getElementById('settingsPanel');
+            panel.className = panel.className.replace(' active', '');
+
+            updateTime();
+        });
+
+        initializeSettings();
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+
+</html>

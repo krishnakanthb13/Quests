@@ -1,0 +1,20 @@
+[package]
+name = "time-widget"
+version = "1.0.0"
+description = "Time Widget - Tauri Version"
+authors = ["you"]
+license = "GPL-3.0"
+repository = ""
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "1.5", features = [] }
+
+[dependencies]
+tauri = { version = "1.5", features = [ "window-maximize", "window-unminimize", "window-hide", "window-unmaximize", "window-minimize", "window-show", "window-start-dragging", "window-close"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Widget</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="widget-container">
+        <div class="header">
+            <button class="settings-btn" id="settingsBtn" title="Settings">⚙</button>
+            <button class="close-btn" id="closeBtn" title="Close">×</button>
+        </div>
+        <div class="time-display" id="timeDisplay">
+            <div class="time-text" id="timeText">Loading...</div>
+        </div>
+        <div class="settings-panel" id="settingsPanel">
+            <h3>Settings</h3>
+            <div class="setting-item">
+                <label>Time Format:</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="timeFormat" value="numeric" checked>
+                        <span>Three fifteen</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="timeFormat" value="natural">
+                        <span>A quarter past three</span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label>Text Size:</label>
+                <div class="text-size-control">
+                    <input type="range" id="textSizeSlider" min="16" max="64" value="32" step="2">
+                    <div class="text-size-display">
+                        <span id="textSizeValue">32</span>px
+                    </div>
+                </div>
+            </div>
+            <button class="save-btn" id="saveBtn">Save</button>
+        </div>
+    </div>
+    <script type="module" src="timeConverter.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
+

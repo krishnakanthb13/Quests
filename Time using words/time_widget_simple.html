@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Segoe UI, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .time-text {
+            font-family: Georgia, serif;
+            font-size: 28px;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="time-text" id="timeText">Loading...</div>
+    <script>
+        var numberWords = {
+            0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+            6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
+            11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen', 15: 'fifteen',
+            16: 'sixteen', 17: 'seventeen', 18: 'eighteen', 19: 'nineteen', 20: 'twenty',
+            30: 'thirty', 40: 'forty', 50: 'fifty'
+        };
+
+        var hourWords = {
+            1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+            6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
+            11: 'eleven', 12: 'twelve'
+        };
+
+        function getHourWord(hour) {
+            var h = hour === 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+            return hourWords[h];
+        }
+
+        function getMinuteWord(minutes) {
+            if (minutes === 0) return '';
+            if (minutes < 20) return numberWords[minutes];
+            var tens = Math.floor(minutes / 10) * 10;
+            var ones = minutes % 10;
+            return ones === 0 ? numberWords[tens] : numberWords[tens] + '-' + numberWords[ones];
+        }
+
+        function timeToWords(hour, minutes) {
+            var hourWord = getHourWord(hour);
+            if (minutes === 0) {
+                return hourWord.charAt(0).toUpperCase() + hourWord.slice(1) + " o'clock";
+            }
+            var minuteWord = getMinuteWord(minutes);
+            var formattedMinute = minutes < 10 ? 'oh ' + minuteWord : minuteWord;
+            return hourWord.charAt(0).toUpperCase() + hourWord.slice(1) + ' ' + formattedMinute;
+        }
+
+        function updateTime() {
+            try {
+                var now = new Date();
+                var hours = now.getHours();
+                var minutes = now.getMinutes();
+                var timeString = timeToWords(hours, minutes);
+                document.getElementById('timeText').innerHTML = timeString;
+            } catch (e) {
+                document.getElementById('timeText').innerHTML = 'Error: ' + e.message;
+            }
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+
+</html>

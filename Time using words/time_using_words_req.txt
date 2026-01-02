@@ -1,0 +1,32 @@
+Telling time in words involves saying the hour and minutes (e.g., "eight thirty"), using "o'clock" for exact hours ("ten o'clock"), and "quarter past/to" or "half past" for specific intervals, while using "minutes past/to" for other times (e.g., "five to three," "twenty past eleven"). You can say the hour first then minutes ("seven fifteen") or use past/to phrases for a more natural feel ("quarter past seven," "twenty-five to three").  [1, 2, 3, 4, 5]  
+Basic formats 
+
+• On the hour: "It's two o'clock" (2:00). [4, 5]  
+• Minutes (01-30): Hour + Minutes (e.g., "six oh five" for 6:05) or Minutes + "past" + Hour (e.g., "five past six"). [2, 6]  
+• Quarter past (15 mins): "Quarter past [Hour]" (e.g., "quarter past six" for 6:15). [2, 4]  
+• Half past (30 mins): "Half past [Hour]" (e.g., "half past six" for 6:30). [2, 4]  
+
+Minutes (31-59) 
+
+• Minutes (31-59): Hour + Minutes (e.g., "six thirty-five" for 6:35) or Minutes + "to" + (Hour + 1) (e.g., "twenty-five to seven" for 6:35). [3, 6]  
+• Quarter to (45 mins): "Quarter to [Next Hour]" (e.g., "quarter to seven" for 6:45). [4, 7]  
+
+Examples 
+
+• 10:00: Ten o'clock. 
+• 3:15: Three fifteen, or a quarter past three. 
+• 4:30: Four thirty, or half past four. 
+• 8:40: Eight forty, or twenty to nine. 
+• 9:50: Nine fifty, or ten to ten. [2, 3, 4, 5, 6, 7]  
+
+AI responses may include mistakes.
+
+[1] https://askfilo.com/user-question-answers-smart-solutions/2-write-the-time-in-words-a-b-7-15-c-11-00-d-9-45-e-f-6-05-g-3232303234303533
+[2] https://www.blablalang.com/tell-and-write-time-in-english/
+[3] https://www.vocabulary.cl/Basic/Telling_Time.htm
+[4] https://petrayvonneenglish.com/general-english/english-plus/telling-the-time/
+[5] https://www.berlitz.com/blog/how-to-tell-time-english
+[6] https://www.englisch-hilfen.de/en/words/uhr.htm
+[7] https://www.youtube.com/watch?v=-fCcdzHj7fg
+
+Not all images can be exported from Search.

@@ -1,0 +1,35 @@
+{
+  "name": "time-using-words-widget",
+  "version": "1.0.0",
+  "description": "Floating time widget that displays time in words",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --x64"
+  },
+  "keywords": ["time", "widget", "floating"],
+  "author": "",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.6.4"
+  },
+  "build": {
+    "appId": "com.timewidget.app",
+    "productName": "Time Widget",
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "files": [
+      "**/*",
+      "!node_modules/**/*",
+      "node_modules/electron/**/*"
+    ]
+  }
+}
+

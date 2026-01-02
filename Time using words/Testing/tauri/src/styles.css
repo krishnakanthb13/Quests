@@ -1,0 +1,223 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: transparent;
+    overflow: hidden;
+    user-select: none;
+}
+
+.widget-container {
+    width: 100%;
+    height: 100%;
+    min-width: 300px;
+    min-height: 150px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    color: #e0e0e0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.settings-btn, .close-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    color: #e0e0e0;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.settings-btn:hover, .close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.close-btn {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.time-display {
+    text-align: center;
+    padding: 20px 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.time-text {
+    font-family: 'Playfair Display', 'Inter', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    padding: 0 10px;
+}
+
+.settings-panel {
+    display: none;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-panel.active {
+    display: block;
+}
+
+.settings-panel h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.setting-item {
+    margin-bottom: 15px;
+}
+
+.setting-item label {
+    display: block;
+    font-size: 13px;
+    color: #b0b0b0;
+    margin-bottom: 10px;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: #e0e0e0;
+}
+
+.radio-group label:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.radio-group input[type="radio"] {
+    cursor: pointer;
+    accent-color: #4a9eff;
+}
+
+.text-size-control {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.text-size-control input[type="range"] {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.text-size-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4a9eff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.text-size-control input[type="range"]::-webkit-slider-thumb:hover {
+    background: #5aaeff;
+    transform: scale(1.1);
+}
+
+.text-size-control input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4a9eff;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.text-size-control input[type="range"]::-moz-range-thumb:hover {
+    background: #5aaeff;
+    transform: scale(1.1);
+}
+
+.text-size-display {
+    text-align: center;
+    font-size: 13px;
+    color: #b0b0b0;
+    font-weight: 500;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #4a9eff 0%, #357abd 100%);
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.save-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+}
+
+.save-btn:active {
+    transform: translateY(0);
+}
+
