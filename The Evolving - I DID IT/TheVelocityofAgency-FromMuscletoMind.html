@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Velocity of Agency: From Muscle to Mind</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- FontAwesome (CSS Webfonts - No SVG Graphics) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: Electric Violet & Teal (Vibrant/Energetic) -->
+    <!-- 
+        Primary (AI/Future): #7c3aed (Violet-600)
+        Secondary (Tools): #06b6d4 (Cyan-500)
+        Tertiary (Muscle): #f59e0b (Amber-500)
+        Background: #f8fafc (Slate-50)
+        Card Bg: #ffffff (White)
+        Text: #1e293b (Slate-800)
+    -->
+
+    <!-- Application Structure Plan:
+         1. Header/Hero: Hook the user with the "I Did It" evolution thesis.
+         2. Section 1 (Water): Bar Chart comparing physical costs (Calories/Time). Goal: Inform/Compare.
+         3. Section 2 (Software): Line Chart showing timeline compression. Goal: Change/Trend.
+         4. Section 3 (Interactive Radar): Interactive Radar Chart to show the changing "Shape of Constraint" across eras. Goal: Relationships/Organize.
+         5. Qualitative Flow: Process diagrams using HTML/CSS (No Mermaid). Goal: Organize.
+         6. Conclusion: Final thought on "Intent vs. Effort".
+    -->
+
+    <!-- Visualization & Content Choices:
+         - Water Chart: Grouped Bar Chart. Best for comparing absolute values (Time/Calories) side-by-side.
+         - Software Chart: Line Chart. Best for showing the trend of "Time to Ship" dropping over time.
+         - Domain Radar: Radar Chart. Excellent for showing how multiple variables (Physical, Cognitive, Tech Skill) shift shape between eras.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All diagrams are HTML/CSS. -->
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Max width constraint */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .step-connector {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 2rem;
+            height: 2px;
+            background-color: #cbd5e1;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+        .last-step .step-connector {
+            display: none;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center text-white font-bold text-lg">V</div>
+                    <span class="font-bold text-xl tracking-tight text-slate-800">Velocity<span class="text-violet-600">.ai</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="#water" class="hover:text-violet-600 transition-colors">Survival (Water)</a>
+                    <a href="#code" class="hover:text-violet-600 transition-colors">Creation (Code)</a>
+                    <a href="#shift" class="hover:text-violet-600 transition-colors">The Shift</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-20 pb-24 px-4 overflow-hidden bg-white">
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="inline-block px-4 py-1.5 rounded-full bg-violet-50 text-violet-700 text-sm font-bold mb-6 border border-violet-100 shadow-sm">
+                Anthropological Report 2026
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight text-slate-900">
+                How "I Did It" <br>
+                <span class="gradient-text">Changed Forever</span>
+            </h1>
+            <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                From the callus on the hand to the prompt in the terminal. We are witnessing the compression of human effort and the explosion of human intent.
+            </p>
+            
+            <!-- Key Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
+                <div class="bg-amber-50 rounded-2xl p-6 border border-amber-100 text-center">
+                    <div class="text-amber-600 font-bold uppercase text-xs tracking-wider mb-2">Muscle Era</div>
+                    <div class="text-4xl font-black text-slate-800 mb-1">10km</div>
+                    <div class="text-slate-500 text-sm">Walk for Water</div>
+                </div>
+                <div class="bg-cyan-50 rounded-2xl p-6 border border-cyan-100 text-center">
+                    <div class="text-cyan-600 font-bold uppercase text-xs tracking-wider mb-2">Tool Era</div>
+                    <div class="text-4xl font-black text-slate-800 mb-1">1km</div>
+                    <div class="text-slate-500 text-sm">Bike to Pump</div>
+                </div>
+                <div class="bg-violet-50 rounded-2xl p-6 border border-violet-100 text-center">
+                    <div class="text-violet-600 font-bold uppercase text-xs tracking-wider mb-2">AI Era</div>
+                    <div class="text-4xl font-black text-slate-800 mb-1">0m</div>
+                    <div class="text-slate-500 text-sm">Tap / Automated</div>
+                </div>
+            </div>
+        </div>
+        <!-- Background Decor -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 opacity-30 pointer-events-none">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-violet-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+            <div class="absolute top-20 right-10 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+            <div class="absolute -bottom-8 left-20 w-72 h-72 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-24">
+
+        <!-- SECTION 1: WATER (Physical) -->
+        <section id="water" class="scroll-mt-24">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                <!-- Text Content -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="p-2 bg-amber-100 rounded-lg text-amber-600">
+                            <i class="fa-solid fa-person-hiking"></i>
+                        </div>
+                        <h2 class="text-3xl font-bold text-slate-900">The Physics of Survival</h2>
+                    </div>
+                    <p class="text-slate-600 leading-relaxed">
+                        For most of history, "I Did It" was a claim of physical endurance. To get water was to survive a journey.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        Technology has systematically removed the caloric cost of survival. We moved from <strong>The Survivalist</strong> (carrying 20kg) to <strong>The Modernist</strong> (paying a bill). The pride of physical burden has been replaced by the expectation of infrastructure.
+                    </p>
+                    
+                    <ul class="space-y-4 mt-6">
+                        <li class="flex items-start gap-3">
+                            <span class="mt-1 w-2 h-2 rounded-full bg-amber-500"></span>
+                            <div>
+                                <strong class="block text-slate-900 text-sm">Muscle Era</strong>
+                                <span class="text-xs text-slate-500">Pure biological output. High caloric burn.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-1 w-2 h-2 rounded-full bg-cyan-500"></span>
+                            <div>
+                                <strong class="block text-slate-900 text-sm">Tool Era</strong>
+                                <span class="text-xs text-slate-500">Mechanical leverage. Efficiency focus.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="mt-1 w-2 h-2 rounded-full bg-violet-600"></span>
+                            <div>
+                                <strong class="block text-slate-900 text-sm">AI/Infra Era</strong>
+                                <span class="text-xs text-slate-500">Zero marginal effort. System abstraction.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Visualization -->
+                <div class="lg:col-span-8">
+                    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 md:p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-slate-800">Cost of "Doing It": Water Retrieval</h3>
+                            <span class="text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded">Normalized Scale</span>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <canvas id="waterChart"></canvas>
+                        </div>
+
+                        <div class="mt-6 grid grid-cols-3 gap-4 text-center border-t border-slate-100 pt-6">
+                            <div>
+                                <div class="text-2xl font-bold text-amber-500">240m</div>
+                                <div class="text-xs text-slate-400 uppercase tracking-wide">Time (Min)</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-cyan-500">30m</div>
+                                <div class="text-xs text-slate-400 uppercase tracking-wide">Time (Min)</div>
+                            </div>
+                            <div>
+                                <div class="text-2xl font-bold text-violet-600">0.1m</div>
+                                <div class="text-xs text-slate-400 uppercase tracking-wide">Time (Min)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CODE (Cognitive) -->
+        <section id="code" class="scroll-mt-24">
+            <div class="bg-slate-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
+                <!-- Grid Decoration -->
+                <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(#334155 1px, transparent 1px), linear-gradient(90deg, #334155 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+                <div class="relative z-10 mb-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="max-w-2xl">
+                             <div class="flex items-center gap-3 mb-4">
+                                <div class="p-2 bg-violet-500/20 rounded-lg text-violet-300">
+                                    <i class="fa-solid fa-code"></i>
+                                </div>
+                                <h2 class="text-3xl font-bold text-white">The Architecture of Code</h2>
+                            </div>
+                            <p class="text-slate-300 text-lg">
+                                Intellectual labor is undergoing the same compression. "I Did It" is shifting from "I wrote every line" to "I orchestrated the outcome."
+                            </p>
+                        </div>
+                        <div class="text-right">
+                             <div class="text-5xl font-black text-violet-400">180x</div>
+                             <div class="text-sm text-slate-400 uppercase tracking-wider">Velocity Increase</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Process Flow (HTML/Tailwind) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10 mb-12">
+                    <!-- Step 1 -->
+                    <div class="bg-slate-800/50 backdrop-blur border border-slate-700 p-6 rounded-xl relative group hover:border-amber-500/50 transition-colors">
+                        <div class="text-xs font-bold text-amber-500 uppercase mb-2">2010s • The Team</div>
+                        <div class="h-16 flex items-center gap-2 mb-4">
+                            <i class="fa-solid fa-users text-2xl text-slate-400"></i>
+                            <span class="text-xs text-slate-500 bg-slate-900 px-2 py-1 rounded">+ 9 Others</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2">Manual Assembly</h4>
+                        <p class="text-sm text-slate-400">"I managed the team that built it over a year."</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="bg-slate-800/50 backdrop-blur border border-slate-700 p-6 rounded-xl relative group hover:border-cyan-500/50 transition-colors">
+                        <div class="text-xs font-bold text-cyan-400 uppercase mb-2">2023 • The Copilot</div>
+                        <div class="h-16 flex items-center gap-2 mb-4">
+                            <i class="fa-solid fa-user text-2xl text-slate-400"></i>
+                            <span class="text-xs text-cyan-900 bg-cyan-400 px-2 py-1 rounded font-bold">+ AI Asst</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2">Assisted Logic</h4>
+                        <p class="text-sm text-slate-400">"I built it myself in a month with autocomplete."</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-slate-800/50 backdrop-blur border border-slate-700 p-6 rounded-xl relative group hover:border-violet-500/50 transition-colors">
+                        <div class="text-xs font-bold text-violet-400 uppercase mb-2">2026 • The Agent</div>
+                        <div class="h-16 flex items-center gap-2 mb-4">
+                            <i class="fa-solid fa-brain text-2xl text-violet-400 animate-pulse"></i>
+                            <span class="text-xs text-violet-900 bg-violet-400 px-2 py-1 rounded font-bold">Orchestrator</span>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2">Semantic Synthesis</h4>
+                        <p class="text-sm text-slate-400">"I described it, and the agents built it in 2 days."</p>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 relative z-10">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Project Implementation Timeline (Days)</h3>
+                    <div class="chart-container">
+                        <canvas id="softwareChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: THE SHIFT (Interactive) -->
+        <section id="shift" class="scroll-mt-24">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-violet-600 font-bold tracking-wider text-sm uppercase">Interactive Analysis</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-4">The Shape of Constraint</h2>
+                <p class="text-slate-600">
+                    The definition of "Hard Work" has changed shape. Explore how the constraint polygon shifts from physical endurance to cognitive vision across different domains.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white rounded-3xl shadow-xl border border-slate-200 p-8">
+                
+                <!-- Controls -->
+                <div class="md:col-span-4 space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 mb-2">Select Domain</label>
+                        <select id="domainSelect" onchange="updateRadar()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-medium focus:ring-2 focus:ring-violet-500 outline-none transition-shadow cursor-pointer">
+                            <option value="water">Basic Survival (Water)</option>
+                            <option value="code">Software Engineering</option>
+                            <option value="knowledge">Research & Knowledge</option>
+                        </select>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <h4 id="insightTitle" class="font-bold text-slate-900 mb-2">Survival Analysis</h4>
+                        <p id="insightText" class="text-sm text-slate-600 leading-relaxed">
+                            In the Muscle Era, success was defined by caloric burn. In the AI Era, physical cost is near zero, and success is defined by access to infrastructure.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <div class="flex items-center gap-2 px-3 py-1 bg-amber-50 border border-amber-100 rounded-full">
+                            <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                            <span class="text-xs font-bold text-amber-700">Muscle Era</span>
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-cyan-50 border border-cyan-100 rounded-full">
+                            <div class="w-3 h-3 rounded-full bg-cyan-500"></div>
+                            <span class="text-xs font-bold text-cyan-700">Tool Era</span>
+                        </div>
+                        <div class="flex items-center gap-2 px-3 py-1 bg-violet-50 border border-violet-100 rounded-full">
+                            <div class="w-3 h-3 rounded-full bg-violet-600"></div>
+                            <span class="text-xs font-bold text-violet-700">AI Era</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Radar Chart -->
+                <div class="md:col-span-8">
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <footer class="text-center py-12 border-t border-slate-200 mt-12">
+            <div class="max-w-2xl mx-auto px-4">
+                <i class="fa-solid fa-fingerprint text-4xl text-slate-300 mb-6"></i>
+                <h2 class="text-2xl font-bold text-slate-900 mb-4">From Endurance to Orchestration</h2>
+                <p class="text-slate-600 mb-8">
+                    The phrase "I Did It" has lost its weight in sweat but gained weight in vision. 
+                    We are no longer the carriers of water. We are the designers of pipelines.
+                </p>
+                <div class="text-sm text-slate-400 font-medium">
+                    &copy; 2026 Velocity Research Group. Generated for Analysis.
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Script Logic -->
+    <script>
+        // --- 1. Utility Functions ---
+
+        // Label Wrapping Function (Splits string into array of lines max ~16 chars)
+        function wrapLabel(str, maxLen = 16) {
+            if (str.length <= maxLen) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= maxLen) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // Common Tooltip Configuration
+        const commonTooltip = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            },
+            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+            titleFont: { family: 'Space Grotesk', size: 14 },
+            bodyFont: { family: 'Outfit', size: 13 },
+            padding: 12,
+            cornerRadius: 8
+        };
+
+        // --- 2. Water Chart (Bar) ---
+        const ctxWater = document.getElementById('waterChart').getContext('2d');
+        const waterChart = new Chart(ctxWater, {
+            type: 'bar',
+            data: {
+                labels: ['Muscle Era (Walk)', 'Tool Era (Bike)', 'AI Era (Tap)'].map(l => wrapLabel(l)),
+                datasets: [
+                    {
+                        label: 'Time Cost (Minutes)',
+                        data: [240, 30, 0.1],
+                        backgroundColor: ['#f59e0b', '#06b6d4', '#7c3aed'],
+                        borderRadius: 8,
+                        barPercentage: 0.6
+                    },
+                    {
+                        label: 'Caloric Cost (kCal)',
+                        data: [1200, 200, 1],
+                        backgroundColor: ['#fcd34d', '#67e8f9', '#a78bfa'],
+                        borderRadius: 8,
+                        barPercentage: 0.6,
+                        hidden: true // Hidden by default to keep it clean, toggleable via legend
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { font: { family: 'Outfit' } } },
+                    tooltip: commonTooltip
+                },
+                scales: {
+                    y: {
+                        type: 'logarithmic', // Log scale to show the massive difference
+                        grid: { color: '#f1f5f9' },
+                        title: { display: true, text: 'Cost (Log Scale)' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // --- 3. Software Chart (Line) ---
+        const ctxSoftware = document.getElementById('softwareChart').getContext('2d');
+        const softwareChart = new Chart(ctxSoftware, {
+            type: 'line',
+            data: {
+                labels: ['2010 (Team)', '2015 (Agile)', '2020 (DevOps)', '2023 (Copilot)', '2025 (Agents)'].map(l => wrapLabel(l)),
+                datasets: [{
+                    label: 'Days to Ship (2 Big Projects)',
+                    data: [365, 180, 90, 30, 2],
+                    borderColor: '#7c3aed',
+                    backgroundColor: 'rgba(124, 58, 237, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#7c3aed',
+                    pointRadius: 6,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: commonTooltip
+                },
+                scales: {
+                    y: {
+                        grid: { color: '#334155' },
+                        ticks: { color: '#94a3b8' },
+                        title: { display: true, text: 'Days', color: '#64748b' }
+                    },
+                    x: {
+                        grid: { color: '#334155' },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+
+        // --- 4. Radar Chart Data & Logic ---
+        
+        const radarData = {
+            water: {
+                data: [
+                    [95, 20, 90, 10, 10],  // Muscle: High Physical, Low Tech
+                    [40, 40, 60, 50, 40],  // Tool: Balanced
+                    [5, 90, 10, 95, 95]    // AI: Low Physical, High Tech
+                ],
+                text: "Survival Analysis: In the Muscle Era, success was defined by caloric burn (Physical Effort). In the AI Era, physical cost is near zero, and success is defined by access to infrastructure (Tech Dependency).",
+                title: "Survival Analysis"
+            },
+            code: {
+                data: [
+                    [30, 80, 90, 60, 20], // Team Era: High Time, High Cognitive Load
+                    [20, 60, 50, 80, 50], // Copilot Era
+                    [5, 20, 10, 95, 95]   // Agent Era: Low Time, High Output
+                ],
+                text: "Creation Analysis: Software development has inverted. We used to spend 90% of time on syntax (Time Cost). Now we spend 90% of time on intent (Output Volume), with AI handling the implementation.",
+                title: "Creation Analysis"
+            },
+            knowledge: {
+                data: [
+                    [60, 70, 90, 10, 10], // Library Era: High Time, High Physical (Travel)
+                    [10, 50, 40, 60, 50], // Search Era (Google)
+                    [5, 10, 5, 95, 95]    // Synthesis Era (LLM)
+                ],
+                text: "Knowledge Analysis: Research has shifted from 'Gathering' to 'Synthesizing'. The constraint is no longer finding the information (Time Cost), but verifying the truth (Cognitive Load).",
+                title: "Knowledge Analysis"
+            }
+        };
+
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        let radarChart = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Physical Effort', 'Cognitive Load', 'Time Cost', 'Tech Dependency', 'Output Volume'].map(l => wrapLabel(l)),
+                datasets: [
+                    {
+                        label: 'Muscle Era',
+                        data: radarData.water.data[0],
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Tool Era',
+                        data: radarData.water.data[1],
+                        borderColor: '#06b6d4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.2)',
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'AI Era',
+                        data: radarData.water.data[2],
+                        borderColor: '#7c3aed',
+                        backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: commonTooltip
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        pointLabels: {
+                            font: { family: 'Space Grotesk', size: 12 },
+                            color: '#475569'
+                        },
+                        ticks: { display: false, max: 100 }
+                    }
+                }
+            }
+        });
+
+        function updateRadar() {
+            const domain = document.getElementById('domainSelect').value;
+            const selected = radarData[domain];
+            
+            // Update Text
+            document.getElementById('insightTitle').innerText = selected.title;
+            document.getElementById('insightText').innerText = selected.text;
+
+            // Update Chart Data
+            radarChart.data.datasets[0].data = selected.data[0];
+            radarChart.data.datasets[1].data = selected.data[1];
+            radarChart.data.datasets[2].data = selected.data[2];
+            
+            radarChart.update();
+        }
+
+    </script>
+</body>
+</html>

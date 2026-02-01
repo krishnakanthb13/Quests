@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Evolution of Agency: How "I Did It" Changed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: Earth & Ether -->
+    <!-- Colors: 
+         Background: Stone-50 (#fafaf9) - Warm, paper-like.
+         Text: Stone-800 (#292524) - Ink-like, high contrast.
+         Primary Accent: Clay/Rust (#ea580c) - Represents physical effort, earth, muscle.
+         Secondary Accent: Teal/Cyan (#0d9488) - Represents technology, electricity, AI.
+         Neutral: Warm Gray (#a8a29e) - Structure and tools.
+    -->
+
+    <!-- Application Structure Plan: 
+         The app is designed as an "Interactive Anthology" rather than a standard dashboard.
+         1. Hero Section: Sets the philosophical stage. "I Did It" has changed definition.
+         2. The Era Slider (Core Interaction): A master control that shifts the entire page's context between "Muscle Era", "Tool Era", and "AI Era".
+         3. Case Studies (Water & Code): Specific deep dives based on the prompt's examples, visualizing the data compression.
+         4. The Cost of "I Did It": Comparative charts showing Time vs. Complexity.
+         5. The Definition of Self: Qualitative anthropology text exploring the psychological shift from "Endurance" to "Intent".
+         6. Interactive Playground: User selects a task (Writing, Coding, Travel) to see the evolution data.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Comparison Charts (Chart.js): Visualizing the exponential decay of time/effort required for tasks. 
+            - Goal: Inform/Compare. 
+            - Justification: Best way to show the magnitude of change (10km vs 100m).
+         2. Dynamic Text Blocks: changing narrative based on the "Era" selected.
+            - Goal: Inform/Storytelling.
+            - Justification: Allows the user to "feel" the mindset of that era.
+         3. Iconography (FontAwesome): Visual cues for the type of labor (Hand -> Gear -> Brain).
+            - Goal: Context.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used (except via FontAwesome webfonts). NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9;
+            color: #292524;
+        }
+        h1, h2, h3, h4, .serif-font {
+            font-family: 'Merriweather', serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            height: 350px;
+            max-height: 400px;
+            margin: 0 auto;
+        }
+        /* Custom scrollbar for a polished feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fafaf9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
+        .era-btn.active {
+            background-color: #292524; /* Stone-800 */
+            color: #fafaf9;
+            border-color: #292524;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Navigation / Header -->
+    <header class="sticky top-0 z-50 bg-[#fafaf9]/95 backdrop-blur-sm border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-feather-pointed text-orange-600 text-xl"></i>
+                <span class="serif-font text-xl font-bold tracking-tight text-stone-800">Anthology of Agency</span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-stone-600">
+                <a href="#introduction" class="hover:text-orange-600 transition-colors">The Thesis</a>
+                <a href="#water-case" class="hover:text-orange-600 transition-colors">Physical Era</a>
+                <a href="#software-case" class="hover:text-orange-600 transition-colors">Digital Era</a>
+                <a href="#synthesis" class="hover:text-teal-600 transition-colors">The Synthesis</a>
+            </nav>
+            <button onclick="scrollToSection('playground')" class="bg-stone-800 text-white px-4 py-2 rounded-md text-sm hover:bg-stone-700 transition-colors">
+                Explore the Shift
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="introduction" class="pt-16 pb-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl sm:text-5xl font-bold text-stone-900 mb-6 leading-tight">
+            How "I Did It" Changed Meaning <br>
+            <span class="text-orange-600 italic font-normal text-3xl sm:text-4xl">From Sweat to Syntax</span>
+        </h1>
+        <p class="text-lg sm:text-xl text-stone-600 leading-relaxed max-w-2xl mx-auto mb-8 serif-font">
+            For millennia, achievement was measured in calories burned and distance traversed. Today, it is measured in decisions made and systems orchestrated. This interactive report explores the anthropological shift of human agency.
+        </p>
+        
+        <!-- Era Selector (Global State Controller) -->
+        <div class="bg-white p-2 rounded-xl shadow-sm border border-stone-200 inline-flex flex-wrap justify-center gap-2 mx-auto">
+            <button onclick="setEra('muscle')" id="btn-muscle" class="era-btn active px-6 py-2 rounded-lg border border-transparent font-medium transition-all text-sm sm:text-base flex items-center gap-2">
+                <i class="fa-solid fa-hand-fist"></i> The Era of Muscle
+            </button>
+            <button onclick="setEra('tool')" id="btn-tool" class="era-btn px-6 py-2 rounded-lg border border-transparent text-stone-600 hover:bg-stone-100 font-medium transition-all text-sm sm:text-base flex items-center gap-2">
+                <i class="fa-solid fa-gear"></i> The Era of Tools
+            </button>
+            <button onclick="setEra('ai')" id="btn-ai" class="era-btn px-6 py-2 rounded-lg border border-transparent text-stone-600 hover:bg-stone-100 font-medium transition-all text-sm sm:text-base flex items-center gap-2">
+                <i class="fa-solid fa-sparkles"></i> The Era of AI
+            </button>
+        </div>
+    </section>
+
+    <!-- Main Dynamic Content Area -->
+    <main class="flex-grow">
+
+        <!-- Section 1: Dynamic Narrative -->
+        <section class="bg-white py-12 border-y border-stone-200">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div id="narrative-text" class="fade-in">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div>
+                        <div class="bg-stone-50 rounded-xl p-6 border border-stone-100 shadow-inner">
+                            <h3 class="text-sm font-bold text-stone-400 uppercase tracking-wider mb-4">Resource Cost Analysis</h3>
+                            <div class="chart-container">
+                                <canvas id="resourceChart"></canvas>
+                            </div>
+                            <p id="chart-caption" class="text-center text-xs text-stone-500 mt-4 italic">
+                                <!-- Populated by JS -->
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Case Study - Water (Physical) -->
+        <section id="water-case" class="py-16 px-4 max-w-6xl mx-auto">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <div class="inline-flex items-center justify-center p-3 bg-blue-100 text-blue-800 rounded-full mb-4">
+                    <i class="fa-solid fa-glass-water text-xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-stone-900 mb-4">Case Study I: The Walk for Water</h2>
+                <p class="text-stone-600 serif-font">
+                    The most fundamental human need. The journey to fetch water illustrates the shift from direct physical burden to infrastructure reliance.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 relative overflow-hidden group hover:border-orange-300 transition-colors">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fa-solid fa-person-walking text-6xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">The Survivalist</h3>
+                    <div class="text-4xl font-bold text-orange-600 mb-1">10km</div>
+                    <div class="text-sm text-stone-500 mb-4">Distance Walked</div>
+                    <p class="text-sm text-stone-600">
+                        "I did it." Meant I survived the journey. I carried 20kg of water on my back. The pride comes from physical endurance and providing for the tribe.
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-stone-100 flex justify-between text-xs font-mono text-stone-500">
+                        <span>Time: ~4 Hours</span>
+                        <span>Cal: 1200</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 relative overflow-hidden group hover:border-stone-400 transition-colors">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fa-solid fa-bicycle text-6xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">The Villager</h3>
+                    <div class="text-4xl font-bold text-stone-600 mb-1">1km</div>
+                    <div class="text-sm text-stone-500 mb-4">Distance Walked</div>
+                    <p class="text-sm text-stone-600">
+                        "I did it." Meant I maintained the bicycle and the pump. I used a tool to reduce the burden. The pride comes from efficiency and reliability.
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-stone-100 flex justify-between text-xs font-mono text-stone-500">
+                        <span>Time: ~30 Mins</span>
+                        <span>Cal: 200</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 relative overflow-hidden group hover:border-teal-400 transition-colors">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fa-solid fa-faucet-drip text-6xl"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">The Modernist</h3>
+                    <div class="text-4xl font-bold text-teal-600 mb-1">10m</div>
+                    <div class="text-sm text-stone-500 mb-4">Distance Walked</div>
+                    <p class="text-sm text-stone-600">
+                        "I did it." Means I paid the water bill. The infrastructure renders the effort invisible. The pride is non-existent; it is an expectation.
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-stone-100 flex justify-between text-xs font-mono text-stone-500">
+                        <span>Time: ~10 Secs</span>
+                        <span>Cal: <1</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Case Study - Software (Cognitive) -->
+        <section id="software-case" class="bg-stone-900 text-stone-100 py-16 px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-10 text-center max-w-3xl mx-auto">
+                    <div class="inline-flex items-center justify-center p-3 bg-teal-900 text-teal-300 rounded-full mb-4">
+                        <i class="fa-solid fa-code text-xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-white mb-4">Case Study II: The Architecture of Code</h2>
+                    <p class="text-stone-400 serif-font">
+                        Intellectual labor follows the same curve. From manual assembly of logic to the semantic orchestration of AI agents.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Text Content -->
+                    <div class="space-y-8">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-lg bg-stone-800 flex items-center justify-center flex-shrink-0 text-stone-500">
+                                <span class="font-mono font-bold">V1</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-stone-200">The Team Era (2010s)</h4>
+                                <p class="text-stone-400 text-sm mt-1">"I implemented 2 big projects along with the team, in 1 year. I did it."</p>
+                                <p class="text-stone-500 text-xs mt-2 italic">Validation: Collaboration, Leadership, Endurance.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-lg bg-stone-800 flex items-center justify-center flex-shrink-0 text-teal-500">
+                                <span class="font-mono font-bold">V2</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-teal-200">The Copilot Era (2023)</h4>
+                                <p class="text-stone-400 text-sm mt-1">"I implemented 2 big projects all by myself, using AI, in 1 month. I did it."</p>
+                                <p class="text-stone-500 text-xs mt-2 italic">Validation: Mastery of Tools, Speed, Autonomy.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-lg bg-stone-800 flex items-center justify-center flex-shrink-0 text-purple-400 animate-pulse">
+                                <span class="font-mono font-bold">V3</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-purple-200">The Agentic Era (2025+)</h4>
+                                <p class="text-stone-400 text-sm mt-1">"I implemented 2 big projects using AI, in 2 days. I did it."</p>
+                                <p class="text-stone-500 text-xs mt-2 italic">Validation: Vision, Prompting, Curation.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="bg-stone-800 p-4 rounded-xl shadow-2xl border border-stone-700">
+                         <h3 class="text-xs font-bold text-stone-400 uppercase tracking-wider mb-4 text-center">Output per Human Hour</h3>
+                        <div class="chart-container">
+                            <canvas id="softwareChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Playground / Explorer -->
+        <section id="playground" class="py-16 px-4 max-w-4xl mx-auto">
+             <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-stone-900 mb-2">The Acceleration Simulator</h2>
+                <p class="text-stone-600">Select a domain to see the breakdown of "Doing It" over time.</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg border border-stone-200 p-6 md:p-8">
+                <!-- Controls -->
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <select id="domain-select" onchange="updatePlayground()" class="bg-stone-50 border border-stone-300 text-stone-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block p-2.5">
+                        <option value="water">Survival (Water)</option>
+                        <option value="code">Building Software</option>
+                        <option value="message">Sending a Message</option>
+                        <option value="knowledge">Researching a Topic</option>
+                    </select>
+                </div>
+
+                <!-- Comparison Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-stone-600">
+                        <thead class="text-xs text-stone-700 uppercase bg-stone-50 border-b border-stone-200">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Metric</th>
+                                <th scope="col" class="px-6 py-3 text-orange-700">Muscle Era</th>
+                                <th scope="col" class="px-6 py-3 text-stone-600">Tool Era</th>
+                                <th scope="col" class="px-6 py-3 text-teal-700">AI Era</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparison-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="insight-box" class="mt-6 p-4 bg-orange-50 rounded-lg border border-orange-100 text-orange-900 text-sm italic text-center serif-font">
+                    <!-- Dynamic Insight -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Conclusion / Philosophy -->
+        <section id="synthesis" class="bg-stone-100 py-16 px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <i class="fa-solid fa-fingerprint text-4xl text-stone-400 mb-6"></i>
+                <h2 class="text-3xl font-bold text-stone-900 mb-6">The Future of "I Did It"</h2>
+                <p class="text-lg text-stone-700 leading-relaxed mb-6 serif-font">
+                    As we move from <em>doing</em> to <em>directing</em>, the nature of human satisfaction changes. 
+                    We are no longer defined by the callus on our hands, but by the clarity of our intent.
+                </p>
+                <p class="text-stone-600">
+                    The phrase "I Did It" is evolving from a testament of <strong>endurance</strong> to a testament of <strong>vision</strong>.
+                </p>
+                <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div class="p-4">
+                        <div class="text-2xl font-bold text-stone-300">Era 1</div>
+                        <div class="text-sm font-bold text-stone-800 uppercase mt-1">Effort</div>
+                    </div>
+                    <div class="p-4">
+                        <div class="text-2xl font-bold text-stone-400">Era 2</div>
+                        <div class="text-sm font-bold text-stone-800 uppercase mt-1">Skill</div>
+                    </div>
+                    <div class="p-4">
+                        <div class="text-2xl font-bold text-stone-500">Era 3</div>
+                        <div class="text-sm font-bold text-stone-800 uppercase mt-1">Management</div>
+                    </div>
+                    <div class="p-4 border border-teal-500 rounded-lg bg-white shadow-sm">
+                        <div class="text-2xl font-bold text-teal-600">Era 4</div>
+                        <div class="text-sm font-bold text-teal-900 uppercase mt-1">Curation</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-900 text-stone-400 py-8 border-t border-stone-800">
+        <div class="max-w-6xl mx-auto px-4 text-center text-sm">
+            <p>&copy; 2025 Anthropological Research Institute. "The Evolution of Agency".</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data & State Management ---
+
+        const narratives = {
+            muscle: {
+                title: "The Era of Muscle: 10,000 BC - 1700 AD",
+                text: "In this era, 'I did it' was a statement of survival. The value created was directly proportional to the caloric output of the human body. To build, one had to lift. To drink, one had to walk. Agency was limited by biology. The horizon of possibility was the distance your legs could carry you.",
+                chartLabel: "Caloric Expenditure (kCal)",
+                chartData: [2500, 200, 10], // High to Low
+                chartLabels: ["Muscle", "Tool", "AI"],
+                caption: "The biological cost of basic survival tasks has plummeted near zero.",
+                color: '#ea580c' // Orange
+            },
+            tool: {
+                title: "The Era of Tools: 1700 AD - 2000 AD",
+                text: "The industrial and early information revolutions introduced leverage. 'I did it' meant mastering a machine or a system. We built pipelines for water and frameworks for logic. Agency became about expertise—knowing which lever to pull. The horizon expanded to where our infrastructure could reach.",
+                chartLabel: "Technical Knowledge Req (Scale 1-100)",
+                chartData: [10, 90, 40], // Low, High, Medium (AI simplifies)
+                chartLabels: ["Muscle", "Tool", "AI"],
+                caption: "Complexity peaked in the Tool Era, requiring specialized training.",
+                color: '#57534e' // Stone
+            },
+            ai: {
+                title: "The Era of Synthesis: 2023 - Present",
+                text: "We are entering the age of synthetic agency. 'I did it' now means 'I conceived it.' The friction between an idea and its execution is vanishing. We are trading the pride of process for the power of speed. Agency is now limited only by imagination and the ability to articulate intent.",
+                chartLabel: "Time to Value (Hours)",
+                chartData: [100, 20, 1], // High to Low
+                chartLabels: ["Muscle", "Tool", "AI"],
+                caption: "Time collapses. Days of work become minutes of curation.",
+                color: '#0d9488' // Teal
+            }
+        };
+
+        const playgroundData = {
+            water: [
+                { metric: "Time Spent", muscle: "4 Hours", tool: "30 Mins", ai: "Instant" },
+                { metric: "Primary Resource", muscle: "Calories", tool: "Electricity", ai: "Data/Subscription" },
+                { metric: "Constraint", muscle: "Endurance", tool: "Infrastructure", ai: "None" },
+                { metric: "The Feeling", muscle: "Exhaustion", tool: "Maintenance", ai: "Expectation" }
+            ],
+            code: [
+                { metric: "Time Spent", muscle: "1 Year", tool: "1 Month", ai: "2 Days" },
+                { metric: "Team Size", muscle: "10 People", tool: "1 Person", ai: "1 Person + Agents" },
+                { metric: "Skill Focus", muscle: "Syntax/Logic", tool: "Frameworks", ai: "System Design" },
+                { metric: "The Feeling", muscle: "Camaraderie", tool: "Flow State", ai: "God Mode" }
+            ],
+            message: [
+                { metric: "Time Spent", muscle: "Weeks (Pigeon)", tool: "Days (Post)", ai: "Milliseconds" },
+                { metric: "Length", muscle: "Short (Precious)", tool: "Long (Formal)", ai: "Variable (Generated)" },
+                { metric: "Effort", muscle: "Travel Risk", tool: "Penmanship", ai: "Prompting" },
+                { metric: "The Feeling", muscle: "Hope", tool: "Duty", ai: "Efficiency" }
+            ],
+            knowledge: [
+                { metric: "Time Spent", muscle: "Years (Journey)", tool: "Hours (Library)", ai: "Seconds (Query)" },
+                { metric: "Source", muscle: "Elders", tool: "Books/Google", ai: "LLM Synthesis" },
+                { metric: "Action", muscle: "Memorization", tool: "Search/Read", ai: "Verification" },
+                { metric: "The Feeling", muscle: "Wisdom", tool: "Discovery", ai: "Access" }
+            ]
+        };
+
+        const insights = {
+            water: "When survival is automated, we stop celebrating the water and start taking it for granted. The 'I Did It' disappears entirely.",
+            code: "The definition of a 'Senior Engineer' shifts from one who writes code to one who judges the code written by the machine.",
+            message: "When communication is instant and effortless, the value of the message depends entirely on its uniqueness, not its arrival.",
+            knowledge: "We have moved from knowledge scarcity to insight scarcity. 'I Learned It' changes to 'I Found It'."
+        };
+
+        // --- Chart Initialization ---
+
+        let resourceChartInstance = null;
+        let softwareChartInstance = null;
+
+        function initCharts() {
+            // 1. Resource Chart (Dynamic Section)
+            const ctx1 = document.getElementById('resourceChart').getContext('2d');
+            resourceChartInstance = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Muscle Era', 'Tool Era', 'AI Era'],
+                    datasets: [{
+                        label: 'Metric',
+                        data: [0, 0, 0], // Initial placeholder
+                        backgroundColor: ['#ea580c', '#a8a29e', '#0d9488'],
+                        borderRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f5f5f4' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. Software Chart (Dark Section)
+            const ctx2 = document.getElementById('softwareChart').getContext('2d');
+            softwareChartInstance = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['2010 (Team)', '2015 (Frameworks)', '2020 (Cloud)', '2023 (Copilot)', '2025 (Agents)'],
+                    datasets: [{
+                        label: 'Lines of Code / Hour',
+                        data: [20, 50, 80, 200, 1000],
+                        borderColor: '#0d9488', // Teal
+                        backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#0d9488',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { 
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + ' LoC Equivalent';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            type: 'logarithmic',
+                            grid: { color: '#44403c' },
+                            ticks: { color: '#a8a29e' }
+                        },
+                        x: { 
+                            grid: { color: '#44403c' },
+                            ticks: { color: '#a8a29e' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Interaction Logic ---
+
+        function setEra(eraKey) {
+            // Update Buttons
+            document.querySelectorAll('.era-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-stone-800', 'text-white');
+                btn.classList.add('text-stone-600', 'hover:bg-stone-100');
+            });
+            const activeBtn = document.getElementById(`btn-${eraKey}`);
+            activeBtn.classList.add('active', 'bg-stone-800', 'text-white');
+            activeBtn.classList.remove('text-stone-600', 'hover:bg-stone-100');
+
+            // Update Text Content
+            const container = document.getElementById('narrative-text');
+            const data = narratives[eraKey];
+            
+            // Fade out effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                container.innerHTML = `
+                    <h2 class="text-3xl font-bold text-stone-900 mb-4 serif-font">${data.title}</h2>
+                    <p class="text-lg text-stone-600 leading-relaxed">${data.text}</p>
+                    <div class="mt-6 inline-block px-4 py-2 rounded border" style="border-color: ${data.color}; color: ${data.color};">
+                        <span class="font-bold text-xs uppercase tracking-wide">Key Driver</span>: 
+                        ${eraKey === 'muscle' ? 'Caloric Energy' : eraKey === 'tool' ? 'Mechanical Leverage' : 'Algorithmic Intelligence'}
+                    </div>
+                `;
+                container.style.opacity = '1';
+                
+                // Update Chart
+                updateResourceChart(data);
+                
+                document.getElementById('chart-caption').innerText = data.caption;
+            }, 300);
+        }
+
+        function updateResourceChart(data) {
+            if (!resourceChartInstance) return;
+            
+            resourceChartInstance.data.datasets[0].data = data.chartData;
+            resourceChartInstance.data.datasets[0].label = data.chartLabel;
+            
+            // Highlight specific bar
+            const colors = ['#d6d3d1', '#d6d3d1', '#d6d3d1']; // Default gray
+            if (data.title.includes("Muscle")) colors[0] = '#ea580c';
+            else if (data.title.includes("Tools")) colors[1] = '#57534e';
+            else colors[2] = '#0d9488';
+            
+            resourceChartInstance.data.datasets[0].backgroundColor = colors;
+            resourceChartInstance.update();
+        }
+
+        function updatePlayground() {
+            const domain = document.getElementById('domain-select').value;
+            const data = playgroundData[domain];
+            const tbody = document.getElementById('comparison-body');
+            const insightBox = document.getElementById('insight-box');
+
+            tbody.innerHTML = '';
+
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "bg-white border-b border-stone-100 hover:bg-stone-50 transition-colors";
+                tr.innerHTML = `
+                    <th scope="row" class="px-6 py-4 font-medium text-stone-900 whitespace-nowrap">${row.metric}</th>
+                    <td class="px-6 py-4 font-mono text-xs text-orange-700">${row.muscle}</td>
+                    <td class="px-6 py-4 font-mono text-xs text-stone-600">${row.tool}</td>
+                    <td class="px-6 py-4 font-mono text-xs text-teal-700 font-bold bg-teal-50 rounded-lg">${row.ai}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            insightBox.innerText = `Author's Note: ${insights[domain]}`;
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Lifecycle ---
+
+        window.onload = function() {
+            initCharts();
+            setEra('muscle'); // Default state
+            updatePlayground(); // Default playground state
+        };
+
+    </script>
+</body>
+</html>
